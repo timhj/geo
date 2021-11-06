@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Brick\Geo;
 
-use Brick\Geo\Engine\GeometryEngineRegistry;
-use Brick\Geo\Exception\GeometryEngineException;
-
 /**
  * A Surface is a 2-dimensional geometric object.
  *
- * A simple Surface may consists of a single "patch" that is associated with one "exterior boundary" and 0 or more
+ * A simple Surface may consist of a single "patch" that is associated with one "exterior boundary" and 0 or more
  * "interior" boundaries. A single such Surface patch in 3-dimensional space is isometric to planar Surfaces, by a
  * simple affine rotation matrix that rotates the patch onto the plane z = 0. If the patch is not vertical,
  * the projection onto the same plane is an isomorphism, and can be represented as a linear transformation,
@@ -34,32 +31,5 @@ abstract class Surface extends Geometry
     public function dimension() : int
     {
         return 2;
-    }
-
-    /**
-     * Returns the area of this Surface, as measured in the spatial reference system of this Surface.
-     *
-     * @noproxy
-     *
-     * @throws GeometryEngineException If the operation is not supported by the geometry engine.
-     */
-    public function area() : float
-    {
-        return GeometryEngineRegistry::get()->area($this);
-    }
-
-    /**
-     * Returns a Point guaranteed to be on this Surface.
-     *
-     * @noproxy
-     *
-     * @psalm-suppress LessSpecificReturnStatement
-     * @psalm-suppress MoreSpecificReturnType
-     *
-     * @throws GeometryEngineException If the operation is not supported by the geometry engine.
-     */
-    public function pointOnSurface() : Point
-    {
-        return GeometryEngineRegistry::get()->pointOnSurface($this);
     }
 }

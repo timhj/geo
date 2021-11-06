@@ -21,12 +21,12 @@ class SurfaceTest extends AbstractTestCase
      */
     public function testArea(string $surface, float $area) : void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         $surface = Surface::fromText($surface);
         $this->skipIfUnsupportedGeometry($surface);
 
-        $actualArea = $surface->area();
+        $actualArea = $geometryEngine->area($surface);
 
         self::assertIsFloat($actualArea);
         self::assertEqualsWithDelta($area, $actualArea, 0.001);
@@ -53,11 +53,11 @@ class SurfaceTest extends AbstractTestCase
      */
     public function testCentroid(string $surface, string $centroid) : void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         $surface = Surface::fromText($surface);
         $this->skipIfUnsupportedGeometry($surface);
-        $this->assertWktEquals($surface->centroid(), $centroid);
+        $this->assertWktEquals($geometryEngine->centroid($surface), $centroid);
     }
 
     public function providerCentroid() : array
@@ -77,7 +77,7 @@ class SurfaceTest extends AbstractTestCase
      */
     public function testPointOnSurface(string $surface) : void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         if ($this->isMySQL() || $this->isMariaDB('< 10.1.2')) {
             // MySQL and older MariaDB do not support ST_PointOnSurface()
@@ -87,10 +87,10 @@ class SurfaceTest extends AbstractTestCase
         $surface = Surface::fromText($surface);
         $this->skipIfUnsupportedGeometry($surface);
 
-        $pointOnSurface = $surface->pointOnSurface();
+        $pointOnSurface = $geometryEngine->pointOnSurface($surface);
 
         self::assertInstanceOf(Point::class, $pointOnSurface);
-        self::assertTrue($surface->contains($pointOnSurface));
+        self::assertTrue($geometryEngine->contains($surface, $pointOnSurface));
     }
 
     public function providerPointOnSurface() : array

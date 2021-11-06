@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Brick\Geo;
 
 use ArrayIterator;
-use Brick\Geo\Engine\GeometryEngineRegistry;
-use Brick\Geo\Exception\GeometryEngineException;
 use Brick\Geo\Exception\CoordinateSystemException;
 use Brick\Geo\Exception\NoSuchGeometryException;
 
@@ -108,31 +106,6 @@ class PolyhedralSurface extends Surface
     public function patches() : array
     {
         return $this->patches;
-    }
-
-    /**
-     * Returns the collection of polygons in this surface that bounds the given polygon 'p' for any polygon 'p' in the surface.
-     *
-     * @noproxy
-     *
-     * @psalm-suppress LessSpecificReturnStatement
-     * @psalm-suppress MoreSpecificReturnType
-     *
-     * @throws GeometryEngineException If the operation is not supported by the geometry engine.
-     */
-    public function boundingPolygons(Polygon $p) : MultiPolygon
-    {
-        return GeometryEngineRegistry::get()->boundingPolygons($p);
-    }
-
-    /**
-     * @noproxy
-     *
-     * @throws GeometryEngineException If the operation is not supported by the geometry engine.
-     */
-    public function isClosed() : bool
-    {
-        return GeometryEngineRegistry::get()->isClosed($this);
     }
 
     /**

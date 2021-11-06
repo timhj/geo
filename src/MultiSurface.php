@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Brick\Geo;
 
-use Brick\Geo\Engine\GeometryEngineRegistry;
-use Brick\Geo\Exception\GeometryEngineException;
-
 /**
  * A MultiSurface is a 2-dimensional GeometryCollection whose elements are Surfaces.
  *
@@ -25,30 +22,4 @@ use Brick\Geo\Exception\GeometryEngineException;
  */
 abstract class MultiSurface extends GeometryCollection
 {
-    /**
-     * Returns the area of this MultiSurface, as measured in the spatial reference system of this MultiSurface.
-     *
-     * @noproxy
-     *
-     * @throws GeometryEngineException If the operation is not supported by the geometry engine.
-     */
-    public function area() : float
-    {
-        return GeometryEngineRegistry::get()->area($this);
-    }
-
-    /**
-     * Returns a Point guaranteed to be on this MultiSurface.
-     *
-     * @noproxy
-     *
-     * @psalm-suppress LessSpecificReturnStatement
-     * @psalm-suppress MoreSpecificReturnType
-     *
-     * @throws GeometryEngineException If the operation is not supported by the geometry engine.
-     */
-    public function pointOnSurface() : Point
-    {
-        return GeometryEngineRegistry::get()->pointOnSurface($this);
-    }
 }

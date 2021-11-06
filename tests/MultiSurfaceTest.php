@@ -65,12 +65,12 @@ class MultiSurfaceTest extends AbstractTestCase
      */
     public function testArea(string $multiSurface, float $area) : void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         $multiSurface = MultiSurface::fromText($multiSurface);
         $this->skipIfUnsupportedGeometry($multiSurface);
 
-        $actualArea = $multiSurface->area();
+        $actualArea = $geometryEngine->area($multiSurface);
 
         self::assertEqualsWithDelta($area, $actualArea, 0.001);
     }
@@ -94,11 +94,11 @@ class MultiSurfaceTest extends AbstractTestCase
      */
     public function testCentroid(string $multiMultiSurface, string $centroid) : void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         $multiSurface = MultiSurface::fromText($multiMultiSurface);
         $this->skipIfUnsupportedGeometry($multiSurface);
-        $this->assertWktEquals($multiSurface->centroid(), $centroid);
+        $this->assertWktEquals($geometryEngine->centroid($multiSurface), $centroid);
     }
 
     public function providerCentroid() : array
@@ -117,7 +117,7 @@ class MultiSurfaceTest extends AbstractTestCase
      */
     public function testPointOnSurface(string $multiMultiSurface) : void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         if ($this->isMySQL() || $this->isMariaDB('< 10.1.2')) {
             // MySQL and older MariaDB do not support ST_PointOnSurface()
@@ -127,10 +127,10 @@ class MultiSurfaceTest extends AbstractTestCase
         $multiSurface = MultiSurface::fromText($multiMultiSurface);
         $this->skipIfUnsupportedGeometry($multiSurface);
 
-        $pointOnSurface = $multiSurface->pointOnSurface();
+        $pointOnSurface = $geometryEngine->pointOnSurface($multiSurface);
 
         self::assertInstanceOf(Point::class, $pointOnSurface);
-        self::assertTrue($multiSurface->contains($pointOnSurface));
+        self::assertTrue($geometryEngine->contains($multiSurface, $pointOnSurface));
     }
 
     public function providerPointOnSurface() : array

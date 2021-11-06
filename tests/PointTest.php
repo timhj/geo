@@ -188,7 +188,7 @@ class PointTest extends AbstractTestCase
      */
     public function testAzimuth(string $observerWkt, string $subjectWkt, ?float $azimuthExpected): void
     {
-        $this->requiresGeometryEngine();
+        $geometryEngine = $this->getGeometryEngine();
 
         if (! $this->isPostGIS()) {
             $this->expectException(GeometryEngineException::class);
@@ -201,7 +201,7 @@ class PointTest extends AbstractTestCase
             $this->expectException(GeometryEngineException::class);
         }
 
-        $azimuthActual = $observer->azimuth($subject);
+        $azimuthActual = $geometryEngine->azimuth($observer, $subject);
 
         self::assertEqualsWithDelta($azimuthExpected, $azimuthActual, 0.001);
     }
